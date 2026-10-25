@@ -81,6 +81,31 @@
       box-shadow: 0 4px 12px rgba(244, 63, 94, 0.45);
       transform: translateY(-1.5px) scale(1.02);
     }
+
+    /* Ticket de Cine */
+    .cinema-ticket {
+      background: radial-gradient(circle at left, transparent 9px, #fff 10px) left,
+                  radial-gradient(circle at right, transparent 9px, #fff 10px) right;
+      background-size: 51% 100%;
+      background-repeat: no-repeat;
+    }
+    .cinema-slot-chip {
+      background-color: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      color: #334155;
+      transition: all 0.18s ease-in-out;
+    }
+    .cinema-slot-chip:hover {
+      border-color: #f43f5e;
+      background-color: #fff1f2;
+    }
+    .cinema-slot-chip.active {
+      background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+      color: #ffffff;
+      border-color: #be123c;
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(244, 63, 94, 0.4);
+    }
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-rose-100 via-pink-50 to-amber-50 text-slate-800 flex items-center justify-center p-2 sm:p-4 selection:bg-rose-500 selection:text-white">
@@ -108,7 +133,7 @@
       </span>
 
       <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 leading-tight mb-2">
-        ¿Aceptas salir <br><span class="font-romantic text-4xl text-rose-600 block mt-0.5">conmigo?</span>
+        ¿Cita? <br><span class="font-romantic text-4xl text-rose-600 block mt-0.5">¿Qué sugieres?</span>
       </h1>
 
       <p id="invite-subtext" class="text-slate-600 text-xs sm:text-sm max-w-xs mx-auto mb-8 transition-all duration-200">
@@ -123,7 +148,7 @@
           <span id="btn-yes-text" class="text-sm">¡Sí, me encantaría! 💖</span>
         </button>
 
-        <!-- Botón No escurridizo que se moverá por toda la pantalla -->
+        <!-- Botón No escurridizo -->
         <button id="btn-no" class="z-20 py-2.5 px-6 bg-white/95 text-slate-700 font-semibold rounded-2xl shadow-md border-2 border-rose-200 hover:bg-rose-50 active:scale-90 transition-all duration-150 flex items-center justify-center gap-1.5 text-xs select-none">
           <span>No puedo 🙈</span>
         </button>
@@ -229,7 +254,7 @@
             </div>
           </div>
 
-          <!-- Alerta de Cervecería Huérfana -->
+          <!-- Alerta de Cervecería Huérfana (Cierre temprano) -->
           <div id="huerfana-warning-banner" class="hidden bg-rose-50 border-l-4 border-rose-500 p-2.5 rounded-xl text-rose-900 transition-all text-left">
             <div class="flex items-start gap-2">
               <span class="text-base leading-none">🍺</span>
@@ -288,7 +313,8 @@
             </div>
           </div>
 
-          <!-- CASO A: Cine y palomitas (3 campos obligatorios ordenados) -->
+          <!-- Contenedor dinámico según el plan elegido -->
+          <!-- CASO A: Cine y palomitas (3 campos ordenados) -->
           <div id="cine-fields-wrapper" class="hidden space-y-2.5 text-left pt-1">
             <div class="bg-rose-50 border border-rose-200 rounded-xl p-2 text-[11px] text-rose-800 flex items-center gap-1.5">
               <span>🎬🍿</span>
@@ -315,7 +341,7 @@
               <p id="cine-movie-error" class="hidden text-[10px] text-rose-600 font-bold mt-1">⚠️ Por favor indica qué película te gustaría ver.</p>
             </div>
 
-            <!-- Campo 3: Hora exacta de la película (Selector cerrado de 7 PM a 12 AM) -->
+            <!-- Campo 3: Hora exacta de la película (Selector estricto cerrado) -->
             <div>
               <label class="block text-[11px] font-bold text-slate-700 mb-1 flex items-center justify-between">
                 <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-rose-500"></i> Hora exacta de la película</span>
@@ -330,7 +356,7 @@
                       <span id="cinema-selected-badge" class="text-sm font-extrabold text-rose-600">8:30 PM</span>
                     </div>
                   </div>
-                  <!-- Controles cerrados: Hora y Minutos -->
+                  <!-- Controles cerrados y restringidos: Hora y Minutos -->
                   <div class="flex items-center gap-1.5">
                     <select id="cine-hour-select" onchange="updateCineCustomTime()" class="bg-rose-50 border border-rose-200 rounded-xl py-2 px-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-400 cursor-pointer shadow-inner">
                       <option value="7">7 PM</option>
@@ -369,7 +395,7 @@
             </div>
           </div>
 
-          <!-- CASO B: Cena deliciosa o Cheves y botana -->
+          <!-- CASO B: Cena deliciosa o Cheves y botana (1 campo de sugerencias) -->
           <div id="suggestions-field-wrapper" class="hidden text-left pt-1">
             <label class="block text-[11px] font-bold text-slate-700 mb-1 leading-snug">
               Sugerencias para la salida
@@ -489,7 +515,7 @@
             <span id="sum-pickup-val" class="font-bold text-slate-800"></span>
           </div>
           
-          <!-- Filas de Cine -->
+          <!-- Filas de Cine (Sucursal, Película y Hora exacta de la función) -->
           <div id="sum-cine-location-row" class="hidden flex items-start justify-between border-b border-rose-200/50 pb-1">
             <span class="text-slate-500">📍 Cine cercano:</span>
             <span id="sum-cine-location-val" class="font-bold text-slate-800 text-right max-w-[60%]"></span>
@@ -572,11 +598,11 @@
       suggestions: '',
       cineLocation: '',
       cineMovie: '',
-      cineShowtime: '8:30 PM',
+      cineShowtime: '8:20 PM',
       termsAccepted: false
     };
 
-    // Catálogo del Paso 2
+    // Catálogo del Paso 2 (uso riguroso de «cheve»)
     const placesCatalog = {
       cena: {
         heading: "¿Qué lugar se te antoja para cenar? 🍽️",
@@ -633,6 +659,7 @@
     const btnYes = document.getElementById('btn-yes');
     const btnYesText = document.getElementById('btn-yes-text');
     const inviteSubtext = document.getElementById('invite-subtext');
+    const inviteBtnArea = document.getElementById('invite-btn-area');
 
     let dodgeAttempts = 0;
     const excusesList = [
@@ -664,12 +691,12 @@
       btnYes.style.transform = `scale(${scale})`;
       btnYesText.innerText = yesTextList[Math.min(dodgeAttempts - 1, yesTextList.length - 1)];
 
-      // Mover directamente al body para permitir movimiento por toda la pantalla sin recorte
+      // Si aún está dentro del contenedor relativo con overflow, moverlo al body
       if (btnNo.parentElement !== document.body) {
         document.body.appendChild(btnNo);
       }
 
-      // Estilos garantizados para estar siempre al frente y visible en pantalla completa
+      // Estilos garantizados para estar siempre al frente y visible
       btnNo.style.position = 'fixed';
       btnNo.style.zIndex = '999999';
       btnNo.style.display = 'inline-flex';
@@ -701,7 +728,7 @@
     btnNo.addEventListener('click', evadeNoButton);
 
     btnYes.addEventListener('click', () => {
-      // Ocultar botón 'No' al aceptar
+      // Ocultar o remover el botón 'No' para que no quede flotando
       if (btnNo) {
         btnNo.style.display = 'none';
       }
@@ -1030,6 +1057,7 @@
 
     function prevStep() {
       if (currentStep > 1) {
+        // Limpiar inputs al retroceder
         clearTextInputFields();
         currentStep--;
         updateStepperUI();
@@ -1137,7 +1165,7 @@
         }
 
         cineTimeRow.classList.remove('hidden');
-        document.getElementById('sum-cine-time-val').innerText = state.cineShowtime || '8:30 PM';
+        document.getElementById('sum-cine-time-val').innerText = state.cineShowtime || '8:20 PM';
       } else {
         // Cena o Cheves
         cineLocRow.classList.add('hidden');
@@ -1160,13 +1188,16 @@
     function buildGoogleCalendarUrl() {
       if (!state.selectedDate) return '#';
 
+      // Parsear fecha seleccionada
       const [year, month, day] = state.selectedDate.split('-').map(Number);
 
+      // Determinar hora de inicio (si es cine, usamos la hora de función o la hora de encuentro)
       let timeStrToParse = state.selectedTime;
       if (state.plan === 'cine' && state.cineShowtime) {
         timeStrToParse = state.cineShowtime;
       }
 
+      // Convertir formato 12h (ej: "8:30 PM") a hora y minutos en 24h
       let [timePart, meridiem] = timeStrToParse.trim().split(' ');
       let [hStr, mStr] = timePart.split(':');
       let hour = parseInt(hStr, 10);
@@ -1178,6 +1209,7 @@
         hour = 0;
       }
 
+      // Crear objetos Date para fecha inicio y fin (duración aproximada: 2.5 horas)
       const startDate = new Date(year, month - 1, day, hour, minute, 0);
       const endDate = new Date(startDate.getTime() + 2.5 * 60 * 60 * 1000);
 
@@ -1205,7 +1237,7 @@
     }
 
     function generateSummaryMessage() {
-      let msg = `¡Hola! Acepto salir contigo 💖✨\n\n`;
+      let msg = `¡Hola! Acepto la cita 💖✨\n\n`;
       msg += `Aquí está nuestro plan oficial y firmado:\n`;
       msg += `• Plan: ${state.planName}\n`;
       msg += `• Lugar: ${state.placeName}\n`;
@@ -1231,6 +1263,7 @@
       msg += `\n📜 Términos y condiciones:\n`;
       msg += `✓ Leídos y firmados sin derecho a fianza (puntualidad con shot de tequila o botana picante, cláusula anti-arrepentimiento y derechos exclusivos de fotos 📸).\n\n`;
 
+      // Enlace a Google Calendar para ti en el mensaje
       const calUrl = buildGoogleCalendarUrl();
       msg += `📅 Agregar a tu Google Calendar:\n${calUrl}\n\n`;
 
@@ -1283,6 +1316,7 @@
     }
 
     function editChoices() {
+      // Limpiar inputs al presionar editar
       clearTextInputFields();
       document.getElementById('screen-summary').classList.add('hidden');
       document.getElementById('screen-planner').classList.remove('hidden');

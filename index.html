@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Invitación Romántica Especial ✨</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Fuentes Google: Poppins, Inter y Dancing Script -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Poppins', 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-romantic {
+      font-family: 'Dancing Script', cursive;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 16px rgba(244, 63, 94, 0.4); }
+      50% { box-shadow: 0 0 28px rgba(244, 63, 94, 0.7); }
+    }
+    .animate-glow {
+      animation: pulseGlow 2.2s infinite ease-in-out;
+    }
+
+    @keyframes floatParticle {
+      0% { transform: translateY(105%) rotate(0deg); opacity: 0; }
+      20% { opacity: 0.35; }
+      80% { opacity: 0.35; }
+      100% { transform: translateY(-20%) rotate(360deg); opacity: 0; }
+    }
+    .floating-item {
+      position: absolute;
+      pointer-events: none;
+      animation: floatParticle 7s linear infinite;
+    }
+
+    .select-card {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .select-card.selected {
+      border-color: #f43f5e !important;
+      background-color: #fff1f2 !important;
+      transform: translateY(-1.5px);
+      box-shadow: 0 6px 16px -3px rgba(244, 63, 94, 0.25);
+    }
+
+    .hour-chip {
+      background-color: #ffffff;
+      border: 1.5px solid #fecdd3;
+      color: #334155;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hour-chip:hover {
+      border-color: #fb7185;
+      background-color: #fff1f2;
+      color: #9f1239;
+    }
+    .hour-chip.selected {
+      background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important;
+      border-color: #be123c !important;
+      color: #ffffff !important;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.45);
+      transform: translateY(-1.5px) scale(1.02);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-rose-100 via-pink-50 to-amber-50 text-slate-800 flex items-center justify-center p-2 sm:p-4 selection:bg-rose-500 selection:text-white">
+
+  <!-- Marco de la Aplicación Móvil -->
+  <main class="w-full max-w-[420px] bg-white/95 backdrop-blur-md border border-rose-200/90 rounded-[38px] shadow-2xl overflow-hidden relative min-h-[720px] flex flex-col justify-between">
+    
+    <!-- Partículas flotantes decorativas -->
+    <div id="floating-bg" class="absolute inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+    <!-- PANTALLA 1: PREGUNTA INICIAL CON BOTÓN ESCURRIDIZO -->
+    <section id="screen-invite" class="relative z-10 flex-1 flex flex-col items-center justify-center p-6 text-center select-none">
+      
+      <div class="relative w-24 h-24 mx-auto mb-4">
+        <div class="w-full h-full rounded-3xl bg-gradient-to-tr from-pink-400 via-rose-500 to-rose-600 flex items-center justify-center text-white shadow-xl shadow-rose-300/50 text-4xl">
+          💌
+        </div>
+        <div class="absolute -bottom-1 -right-1 bg-white p-1.5 rounded-full shadow-md text-sm animate-bounce">
+          ✨
+        </div>
+      </div>
+
+      <span class="inline-block px-3 py-1 bg-rose-100 text-rose-600 font-semibold text-[11px] rounded-full mb-2 tracking-wide uppercase">
+        Pregunta seria para ti ✨
+      </span>
+
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 leading-tight mb-2">
+        ¿Aceptas salir <br><span class="font-romantic text-4xl text-rose-600 block mt-0.5">conmigo?</span>
+      </h1>
+
+      <p id="invite-subtext" class="text-slate-600 text-xs sm:text-sm max-w-xs mx-auto mb-8 transition-all duration-200">
+        Prometo buena comida, muchas risas y una salida increíble. ¿Aceptas la invitación? 🥰
+      </p>
+
+      <!-- Botonera interactiva -->
+      <div id="invite-btn-area" class="relative w-full min-h-[140px] flex flex-col items-center justify-center gap-3">
+        <!-- Botón Sí -->
+        <button id="btn-yes" class="z-20 w-full max-w-[250px] py-3.5 px-6 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white font-bold rounded-2xl shadow-lg shadow-rose-400/40 hover:scale-105 active:scale-95 transition-all duration-300 animate-glow flex items-center justify-center gap-2">
+          <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+          <span id="btn-yes-text" class="text-sm">¡Sí, me encantaría! 💖</span>
+        </button>
+
+        <!-- Botón No escurridizo que se moverá por toda la pantalla -->
+        <button id="btn-no" class="z-20 py-2.5 px-6 bg-white/95 text-slate-700 font-semibold rounded-2xl shadow-md border-2 border-rose-200 hover:bg-rose-50 active:scale-90 transition-all duration-150 flex items-center justify-center gap-1.5 text-xs select-none">
+          <span>No puedo 🙈</span>
+        </button>
+      </div>
+
+      <p class="text-[10px] text-slate-400 font-medium mt-4">
+        Pista: El botón «No» es un poquito escurridizo 😉
+      </p>
+    </section>
+
+    <!-- PANTALLA 2: STEPPER INTERACTIVO DE 5 PASOS -->
+    <section id="screen-planner" class="hidden relative z-10 flex-1 flex-col p-4 sm:p-5 justify-between">
+      
+      <!-- Barra de Progreso Superior -->
+      <div class="mb-3.5">
+        <div class="flex items-center justify-between mb-1.5 px-1">
+          <span id="stepper-badge" class="text-[10px] font-bold uppercase tracking-wider text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">
+            Paso 1 de 5
+          </span>
+          <span id="stepper-title" class="text-xs font-semibold text-slate-600">
+            Elige el plan
+          </span>
+        </div>
+
+        <div class="grid grid-cols-5 gap-1.5 h-1.5 bg-slate-100 rounded-full overflow-hidden p-0.5">
+          <div id="progress-bar-1" class="h-full bg-rose-500 rounded-full transition-all duration-300"></div>
+          <div id="progress-bar-2" class="h-full bg-slate-200 rounded-full transition-all duration-300"></div>
+          <div id="progress-bar-3" class="h-full bg-slate-200 rounded-full transition-all duration-300"></div>
+          <div id="progress-bar-4" class="h-full bg-slate-200 rounded-full transition-all duration-300"></div>
+          <div id="progress-bar-5" class="h-full bg-slate-200 rounded-full transition-all duration-300"></div>
+        </div>
+      </div>
+
+      <!-- Contenedor dinámico de pasos -->
+      <div class="flex-1 flex flex-col justify-between overflow-y-auto no-scrollbar py-1">
+
+        <!-- PASO 1: Plan -->
+        <div id="step-content-1" class="step-view space-y-2.5">
+          <div class="text-left">
+            <h2 class="text-base font-bold text-slate-800">¿Qué plan te late más? ✨</h2>
+            <p class="text-xs text-slate-500">Selecciona el tipo de salida para comenzar.</p>
+          </div>
+
+          <div class="space-y-2">
+            <!-- Cena deliciosa -->
+            <div onclick="selectPlan('cena')" id="plan-card-cena" class="select-card selected border-2 border-slate-200 rounded-2xl p-3 cursor-pointer flex items-center gap-3">
+              <span class="text-2xl">🍽️</span>
+              <div class="text-left">
+                <p class="font-bold text-slate-800 text-xs">Cena deliciosa</p>
+                <p class="text-[11px] text-slate-500">Buena comida, plática amena y gran sazón</p>
+              </div>
+            </div>
+
+            <!-- Cheves y botana -->
+            <div onclick="selectPlan('cheves')" id="plan-card-cheves" class="select-card border-2 border-slate-200 rounded-2xl p-3 cursor-pointer flex items-center gap-3">
+              <span class="text-2xl">🍻</span>
+              <div class="text-left">
+                <p class="font-bold text-slate-800 text-xs">Cheves y botana</p>
+                <p class="text-[11px] text-slate-500">Para relajarnos, tomar una buena cheve y picar algo rico</p>
+              </div>
+            </div>
+
+            <!-- Cine y palomitas -->
+            <div onclick="selectPlan('cine')" id="plan-card-cine" class="select-card border-2 border-slate-200 rounded-2xl p-3 cursor-pointer flex items-center gap-3">
+              <span class="text-2xl">🎬</span>
+              <div class="text-left">
+                <p class="font-bold text-slate-800 text-xs">Cine y palomitas</p>
+                <p class="text-[11px] text-slate-500">Una buena película con snacks y refresco</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 2: Lugares Dinámicos -->
+        <div id="step-content-2" class="step-view hidden space-y-2.5">
+          <div class="text-left">
+            <h2 id="step2-heading" class="text-base font-bold text-slate-800">Elige el lugar</h2>
+            <p id="step2-subheading" class="text-xs text-slate-500">Opciones seleccionadas con cuidado</p>
+          </div>
+
+          <div id="step-2-options-container" class="space-y-2">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </div>
+
+        <!-- PASO 3: Fecha y Hora (15 días, reglas de Sábado y Huérfana) -->
+        <div id="step-content-3" class="step-view hidden space-y-2.5">
+          <div class="text-left">
+            <h2 class="text-base font-bold text-slate-800">¿Qué día y a qué hora? 🗓️</h2>
+            <p class="text-xs text-slate-500">Disponible a partir de hoy y durante los próximos 15 días.</p>
+          </div>
+
+          <!-- Alerta de Sábado por Softbol -->
+          <div id="softball-warning-banner" class="hidden bg-amber-50 border-l-4 border-amber-500 p-2.5 rounded-xl text-amber-900 transition-all text-left">
+            <div class="flex items-start gap-2">
+              <span class="text-base leading-none">⚾</span>
+              <div class="text-[11px] leading-snug">
+                <p class="font-bold text-amber-800">Aviso importante para el sábado</p>
+                <p class="text-amber-700 mt-0.5">
+                  Los sábados tengo juego de softbol y aún no sé el horario exacto que me tocará jugar. Por eso el horario disponible inicia a partir de las <strong>9:30 PM</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alerta de Cervecería Huérfana -->
+          <div id="huerfana-warning-banner" class="hidden bg-rose-50 border-l-4 border-rose-500 p-2.5 rounded-xl text-rose-900 transition-all text-left">
+            <div class="flex items-start gap-2">
+              <span class="text-base leading-none">🍺</span>
+              <div class="text-[11px] leading-snug">
+                <p class="font-bold text-rose-800">Horario Cervecería Huérfana</p>
+                <p class="text-rose-700 mt-0.5">
+                  En Huérfana cierran temprano (entre 10:00 y 11:00 PM), por lo que para disfrutar tranquilos de las cheves el horario está limitado como máximo a las <strong>9:30 PM</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Selector de Calendario -->
+          <div class="text-left">
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-700 mb-1 flex items-center gap-1">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-rose-500"></i> Día preferido
+            </label>
+            <input type="date" id="date-picker" onchange="handleDateChange(this.value)" class="w-full bg-rose-50/60 border border-rose-200 rounded-xl p-2.5 text-xs text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-rose-400">
+            <p id="date-helper-text" class="text-[10px] text-slate-500 mt-1 font-medium"></p>
+          </div>
+
+          <!-- Grid de Horarios con Alto Contraste -->
+          <div class="text-left">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-rose-500"></i> Horario estimado
+              </span>
+              <span id="saturday-badge" class="hidden text-[9px] text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full font-bold">
+                ⚾ Sábado: 9:30 PM en adelante
+              </span>
+            </div>
+            <div id="hours-grid" class="grid grid-cols-3 gap-2">
+              <!-- Chips de horario generados dinámicamente -->
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 4: Logística y Campos Específicos -->
+        <div id="step-content-4" class="step-view hidden space-y-3">
+          <div class="text-left">
+            <h2 class="text-base font-bold text-slate-800">Detalles de logística 🚗</h2>
+            <p class="text-xs text-slate-500">¿Cómo nos coordinamos para vernos?</p>
+          </div>
+
+          <!-- Selección de traslado -->
+          <div class="grid grid-cols-2 gap-2 text-left">
+            <div onclick="selectLogistics('Paso por ti 🚗', this)" id="logistics-card-pickup" class="select-card selected border-2 border-slate-200 rounded-2xl p-3 cursor-pointer text-center">
+              <span class="text-2xl">🚗</span>
+              <p class="font-bold text-slate-800 text-xs mt-1">Paso por ti</p>
+              <p class="text-[9px] text-slate-500">Tú solo prepárate y paso por ti</p>
+            </div>
+            <div onclick="selectLogistics('Nos vemos en el lugar 📍', this)" id="logistics-card-meet" class="select-card border-2 border-slate-200 rounded-2xl p-3 cursor-pointer text-center">
+              <span class="text-2xl">📍</span>
+              <p class="font-bold text-slate-800 text-xs mt-1">Nos vemos en el lugar</p>
+              <p class="text-[9px] text-slate-500">Llegamos directo al punto acordado</p>
+            </div>
+          </div>
+
+          <!-- CASO A: Cine y palomitas (3 campos obligatorios ordenados) -->
+          <div id="cine-fields-wrapper" class="hidden space-y-2.5 text-left pt-1">
+            <div class="bg-rose-50 border border-rose-200 rounded-xl p-2 text-[11px] text-rose-800 flex items-center gap-1.5">
+              <span>🎬🍿</span>
+              <span>En este evento te toca escoger la película y horario (aún no conozco mucho tus gustos)</span>
+            </div>
+
+            <!-- Campo 1: Cine más cercano -->
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1 flex items-center justify-between">
+                <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-500"></i> ¿Cuál cine te queda más cerca?</span>
+                <span class="text-[9px] text-rose-500 font-bold uppercase tracking-wider">* Obligatorio</span>
+              </label>
+              <input type="text" id="cine-location-input" oninput="clearFieldError(this)" placeholder="Ej. Cinépolis Galerías, Cinemex Plaza Real..." class="w-full bg-rose-50/50 border border-rose-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-400 placeholder-slate-400 transition-all">
+              <p id="cine-location-error" class="hidden text-[10px] text-rose-600 font-bold mt-1">⚠️ Por favor indica qué cine te queda más cerca.</p>
+            </div>
+
+            <!-- Campo 2: Nombre de la película -->
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1 flex items-center justify-between">
+                <span class="flex items-center gap-1"><i data-lucide="film" class="w-3.5 h-3.5 text-rose-500"></i> Nombre de la película</span>
+                <span class="text-[9px] text-rose-500 font-bold uppercase tracking-wider">* Obligatorio</span>
+              </label>
+              <input type="text" id="cine-movie-input" oninput="clearFieldError(this)" placeholder="¿Qué película tienes ganas de ver?" class="w-full bg-rose-50/50 border border-rose-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-400 placeholder-slate-400 transition-all">
+              <p id="cine-movie-error" class="hidden text-[10px] text-rose-600 font-bold mt-1">⚠️ Por favor indica qué película te gustaría ver.</p>
+            </div>
+
+            <!-- Campo 3: Hora exacta de la película (Selector cerrado de 7 PM a 12 AM) -->
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1 flex items-center justify-between">
+                <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-rose-500"></i> Hora exacta de la película</span>
+                <span class="text-[9px] text-rose-500 font-bold uppercase tracking-wider">* Obligatorio</span>
+              </label>
+              <div class="bg-white border-2 border-rose-200 hover:border-rose-300 rounded-2xl p-3 shadow-sm transition-all">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl">🎟️</span>
+                    <div>
+                      <span class="text-[9px] uppercase tracking-wider text-slate-400 font-bold block">Función elegida</span>
+                      <span id="cinema-selected-badge" class="text-sm font-extrabold text-rose-600">8:30 PM</span>
+                    </div>
+                  </div>
+                  <!-- Controles cerrados: Hora y Minutos -->
+                  <div class="flex items-center gap-1.5">
+                    <select id="cine-hour-select" onchange="updateCineCustomTime()" class="bg-rose-50 border border-rose-200 rounded-xl py-2 px-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-400 cursor-pointer shadow-inner">
+                      <option value="7">7 PM</option>
+                      <option value="8" selected>8 PM</option>
+                      <option value="9">9 PM</option>
+                      <option value="10">10 PM</option>
+                      <option value="11">11 PM</option>
+                      <option value="12">12 AM</option>
+                    </select>
+                    <span class="text-slate-400 font-bold">:</span>
+                    <select id="cine-minute-select" onchange="updateCineCustomTime()" class="bg-rose-50 border border-rose-200 rounded-xl py-2 px-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-400 cursor-pointer shadow-inner">
+                      <option value="00">00</option>
+                      <option value="05">05</option>
+                      <option value="10">10</option>
+                      <option value="15">15</option>
+                      <option value="20">20</option>
+                      <option value="25">25</option>
+                      <option value="30" selected>30</option>
+                      <option value="35">35</option>
+                      <option value="40">40</option>
+                      <option value="45">45</option>
+                      <option value="50">50</option>
+                      <option value="55">55</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="mt-2.5 pt-2 border-t border-rose-100 flex items-center justify-between">
+                  <p class="text-[10px] text-rose-600 font-semibold flex items-center gap-1">
+                    <span>🎬</span> Rango restringido: únicamente 7:00 PM a 12:00 AM
+                  </p>
+                  <span class="text-[9px] text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full font-bold">
+                    Cine nocturno ✓
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CASO B: Cena deliciosa o Cheves y botana -->
+          <div id="suggestions-field-wrapper" class="hidden text-left pt-1">
+            <label class="block text-[11px] font-bold text-slate-700 mb-1 leading-snug">
+              Sugerencias para la salida
+            </label>
+            <input type="text" id="suggestions-input" placeholder="¿Algún antojo, detalle especial o sugerencia para la salida? (Opcional)" class="w-full bg-rose-50/50 border border-rose-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-400 placeholder-slate-400">
+          </div>
+        </div>
+
+        <!-- PASO 5: Términos y Condiciones Oficiales -->
+        <div id="step-content-5" class="step-view hidden space-y-2.5 text-left">
+          <div>
+            <h2 class="text-base font-bold text-slate-800">Términos y Condiciones 📜✨</h2>
+            <p class="text-[11px] text-slate-500">Cláusulas del Contrato de Cita Oficial.</p>
+          </div>
+
+          <div class="space-y-2 max-h-[220px] overflow-y-auto no-scrollbar pr-1">
+            
+            <!-- Cláusula 1 -->
+            <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-2.5 text-[11px] text-slate-600 leading-relaxed space-y-1">
+              <p class="font-bold text-slate-800 flex items-center gap-1.5">
+                <span>⏱️</span> 1. Cláusula de Puntualidad
+              </p>
+              <p>
+                A nuestra edad el outfit y el tráfico son temas serios, pero el hambre no perdona.
+              </p>
+              <p class="bg-rose-50 text-rose-700 p-2 rounded-xl font-semibold border border-rose-100">
+                🚨 <strong>Multa:</strong> Al minuto 15 de retraso injustificado, la persona impuntual paga y se toma un shot de tequila o come la botana más picante de la mesa, sin derecho a reclamo.
+              </p>
+            </div>
+
+            <!-- Cláusula 2 -->
+            <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-2.5 text-[11px] text-slate-600 leading-relaxed space-y-1">
+              <p class="font-bold text-slate-800 flex items-center gap-1.5">
+                <span>🛋️</span> 2. Cláusula Anti-Arrepentimiento
+              </p>
+              <p>
+                Sé que eres una persona muy cotizada, pero nada anula tu compromiso previo conmigo. Quedarse en pijama o inventar planes de última hora queda estrictamente vetado.
+              </p>
+              <p class="bg-rose-50 text-rose-700 p-2 rounded-xl font-semibold border border-rose-100">
+                🚨 <strong>Multa:</strong> Cancelar sin causa de fuerza mayor comprobable amerita invitar la revancha completa en la siguiente cita y mandar un meme formal de disculpa.
+              </p>
+            </div>
+
+            <!-- Cláusula 3 -->
+            <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-2.5 text-[11px] text-slate-600 leading-relaxed space-y-1">
+              <p class="font-bold text-slate-800 flex items-center gap-1.5">
+                <span>📸</span> 3. Derechos de Imagen
+              </p>
+              <p>
+                Prohibido subir fotos con ojos entrecerrados o ángulos poco favorecedores. Todos los derechos del contenido generado me pertenecerán exclusivamente a mí, con previa aprobación de 3 segundos antes de publicar.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Casilla de Aceptación Obligatoria -->
+          <div class="pt-1">
+            <label class="flex items-center gap-2 cursor-pointer bg-rose-50/80 hover:bg-rose-100/80 p-2.5 rounded-xl border border-rose-200 transition-all">
+              <input type="checkbox" id="terms-checkbox" onchange="handleTermsChange(this.checked)" class="w-4 h-4 rounded text-rose-600 focus:ring-rose-400 accent-rose-600 cursor-pointer">
+              <span class="text-[10px] font-bold text-slate-800 leading-tight">
+                He leído y acepto los 3 términos sin derecho a fianza ✍️✨
+              </span>
+            </label>
+            <p id="terms-error-text" class="hidden text-[9px] text-rose-600 font-bold mt-1 text-center animate-bounce">
+              ⚠️ Debes marcar la casilla para poder firmar y avanzar al resumen.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Botones de Navegación del Stepper -->
+      <div class="mt-3 pt-2.5 border-t border-rose-100 flex items-center justify-between gap-2">
+        <button id="btn-prev-step" onclick="prevStep()" class="invisible px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs flex items-center gap-1 border border-slate-200 transition-all">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>Atrás</span>
+        </button>
+
+        <button id="btn-next-step" onclick="nextStep()" class="ml-auto px-5 py-2.5 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold rounded-xl text-xs shadow-md shadow-rose-400/30 flex items-center gap-1.5 transition-all active:scale-95">
+          <span id="btn-next-label">Siguiente</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- PANTALLA 3: RESUMEN FINAL Y ENVÍO A WHATSAPP -->
+    <section id="screen-summary" class="hidden relative z-10 flex-1 flex-col p-5 items-center justify-between text-center select-none">
+      <div class="w-full">
+        <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-2 text-2xl shadow-sm">
+          🎉
+        </div>
+        <h2 class="text-lg font-extrabold text-slate-800">¡Cita y Contrato Aprobados!</h2>
+        <p class="text-slate-500 text-[11px] mb-3">Tu respuesta está lista para enviarse por WhatsApp:</p>
+
+        <!-- Tarjeta de Resumen -->
+        <div class="bg-gradient-to-br from-rose-50 to-pink-50 border border-rose-200 rounded-2xl p-3 text-left text-xs space-y-1.5 mb-3 shadow-inner">
+          <div class="flex items-center justify-between border-b border-rose-200/50 pb-1">
+            <span class="text-slate-500">✨ Plan:</span>
+            <span id="sum-plan-val" class="font-bold text-slate-800"></span>
+          </div>
+          <div class="flex items-center justify-between border-b border-rose-200/50 pb-1">
+            <span class="text-slate-500">📍 Lugar:</span>
+            <span id="sum-place-val" class="font-bold text-slate-800"></span>
+          </div>
+          <div class="flex items-center justify-between border-b border-rose-200/50 pb-1">
+            <span class="text-slate-500">📅 Fecha:</span>
+            <span id="sum-date-val" class="font-bold text-rose-600"></span>
+          </div>
+          <div class="flex items-center justify-between border-b border-rose-200/50 pb-1">
+            <span class="text-slate-500">⏰ Hora encuentro:</span>
+            <span id="sum-time-val" class="font-bold text-rose-600"></span>
+          </div>
+          <div class="flex items-center justify-between border-b border-rose-200/50 pb-1">
+            <span class="text-slate-500">🚗 Logística:</span>
+            <span id="sum-pickup-val" class="font-bold text-slate-800"></span>
+          </div>
+          
+          <!-- Filas de Cine -->
+          <div id="sum-cine-location-row" class="hidden flex items-start justify-between border-b border-rose-200/50 pb-1">
+            <span class="text-slate-500">📍 Cine cercano:</span>
+            <span id="sum-cine-location-val" class="font-bold text-slate-800 text-right max-w-[60%]"></span>
+          </div>
+          <div id="sum-cine-movie-row" class="hidden flex items-start justify-between border-b border-rose-200/50 pb-1">
+            <span class="text-slate-500">🎬 Película:</span>
+            <span id="sum-cine-movie-val" class="font-bold text-slate-800 text-right max-w-[60%]"></span>
+          </div>
+          <div id="sum-cine-time-row" class="hidden flex items-start justify-between border-b border-rose-200/50 pb-1">
+            <span class="text-slate-500">🎟️ Función de cine:</span>
+            <span id="sum-cine-time-val" class="font-bold text-slate-800 text-right max-w-[60%]"></span>
+          </div>
+
+          <!-- Fila de Sugerencias para Cena o Cheves -->
+          <div id="sum-suggestions-row" class="hidden flex items-start justify-between border-b border-rose-200/50 pb-1">
+            <span class="text-slate-500">💡 Sugerencias:</span>
+            <span id="sum-suggestions-val" class="font-bold text-slate-800 text-right max-w-[60%]"></span>
+          </div>
+
+          <div class="flex items-center justify-between pt-0.5">
+            <span class="text-slate-500">📜 Términos:</span>
+            <span class="font-bold text-emerald-600 flex items-center gap-1">Aceptados y firmados ✓</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="w-full space-y-2">
+        <a id="btn-send-whatsapp" href="#" target="_blank" class="w-full py-3.5 px-3 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold rounded-2xl text-xs shadow-lg shadow-emerald-500/30 transition-all flex items-center justify-center gap-2">
+          <i data-lucide="message-circle" class="w-4 h-4 fill-current"></i>
+          <span>Enviar confirmación por WhatsApp 💬</span>
+        </a>
+
+        <!-- Botón para agregar a Google Calendar -->
+        <a id="btn-add-calendar" href="#" target="_blank" class="w-full py-2.5 px-3 bg-blue-500 hover:bg-blue-600 active:scale-95 text-white font-semibold rounded-xl text-xs shadow-sm transition-all flex items-center justify-center gap-1.5">
+          <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
+          <span>Añadir a mi Google Calendar 📅</span>
+        </a>
+
+        <button onclick="copySummaryToClipboard()" class="w-full py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 border border-slate-200">
+          <i data-lucide="copy" class="w-3.5 h-3.5 text-slate-500"></i>
+          <span id="btn-copy-label">Copiar texto del plan</span>
+        </button>
+
+        <button onclick="editChoices()" class="text-xs text-rose-500 font-medium hover:underline pt-1">
+          ¿Quieres ajustar algo? Editar opciones
+        </button>
+      </div>
+    </section>
+
+    <!-- Mini Notificación Toast -->
+    <div id="toast" class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/95 text-white px-3.5 py-1.5 rounded-full text-[11px] font-semibold shadow-xl transition-all duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-1.5">
+      <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i>
+      <span id="toast-text">Copiado con éxito</span>
+    </div>
+
+  </main>
+
+  <script>
+    // Inicializar Iconos de Lucide
+    lucide.createIcons();
+
+    // Teléfono fijo de WhatsApp
+    const WHATSAPP_PHONE = "528442384456";
+
+    // Variables de Estado
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    const state = {
+      plan: 'cena', // 'cena' | 'cheves' | 'cine'
+      planName: 'Cena deliciosa 🍽️',
+      placeId: 'ramen',
+      placeName: 'Ramen (Matsuri Ramen) 🍜',
+      selectedDate: '',
+      formattedDate: '',
+      isSaturday: false,
+      selectedTime: '8:00 PM',
+      logistics: 'Paso por ti 🚗',
+      suggestions: '',
+      cineLocation: '',
+      cineMovie: '',
+      cineShowtime: '8:30 PM',
+      termsAccepted: false
+    };
+
+    // Catálogo del Paso 2
+    const placesCatalog = {
+      cena: {
+        heading: "¿Qué lugar se te antoja para cenar? 🍽️",
+        subheading: "Elige una de estas opciones deliciosas",
+        items: [
+          { id: "ramen", label: "Ramen", icon: "🍜", desc: "Matsuri Ramen" },
+          { id: "sushi", label: "Sushi", icon: "🍣", desc: "Sake Grill" },
+          { id: "alitas_burgers", label: "Alitas y Hamburguesas", icon: "🍗🍔", desc: "Clock Saltillo" }
+        ]
+      },
+      cheves: {
+        heading: "¿A dónde vamos por las cheves? 🍻",
+        subheading: "Elige el mejor spot para botanear, echar cheve y platicar",
+        items: [
+          { id: "cerdo_babel", label: "Cerdo de Babel", icon: "🐷", desc: "Zona centro" },
+          { id: "huerfana", label: "Cervecería Huérfana", icon: "🍺", desc: "V. Carranza (Cierra temprano)" },
+          { id: "random_centro", label: "Lugar random del centro", icon: "🎲", desc: "Caminar por el centro y entrar al primer bar que nos guste" }
+        ]
+      },
+      cine: {
+        heading: "¿En qué cine vemos la película? 🎬",
+        subheading: "Elige tu cadena de cine favorita",
+        items: [
+          { id: "cinepolis", label: "Cinépolis", icon: "🍿", desc: "Salas tradicionales o VIP" },
+          { id: "cinemex", label: "Cinemex", icon: "🎬", desc: "Palomitas clásicas y películas de estreno" }
+        ]
+      }
+    };
+
+    // Horarios base de 7:00 PM a 11:00 PM
+    const allSlots = ['7:00 PM', '7:30 PM', '8:00 PM', '8:30 PM', '9:00 PM', '9:30 PM', '10:00 PM', '10:30 PM', '11:00 PM'];
+
+    // Partículas flotantes decorativas
+    function setupBackgroundParticles() {
+      const bg = document.getElementById('floating-bg');
+      const emojis = ['💖', '✨', '🌸', '🍻', '🍿', '🍣', '🌷', '💘'];
+      for (let i = 0; i < 10; i++) {
+        const span = document.createElement('span');
+        span.className = 'floating-item select-none';
+        span.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        span.style.left = `${Math.random() * 90}%`;
+        span.style.animationDuration = `${6 + Math.random() * 4}s`;
+        span.style.animationDelay = `${Math.random() * 3}s`;
+        span.style.fontSize = `${14 + Math.random() * 14}px`;
+        bg.appendChild(span);
+      }
+    }
+    setupBackgroundParticles();
+
+    // ==========================================
+    // LÓGICA DEL BOTÓN ESCURRIDIZO «NO» Y BOTÓN «SÍ»
+    // ==========================================
+    const btnNo = document.getElementById('btn-no');
+    const btnYes = document.getElementById('btn-yes');
+    const btnYesText = document.getElementById('btn-yes-text');
+    const inviteSubtext = document.getElementById('invite-subtext');
+
+    let dodgeAttempts = 0;
+    const excusesList = [
+      "¿Segura? Piénsalo dos veces... 😉",
+      "¡El botón «No» tiene cosquillas! 🤭",
+      "¡No te resistas, prometo que te divertirás! ✨",
+      "Te aseguro que la pasaremos genial 🌷",
+      "¡Oye, este botón corre muy rápido! 🏃💨",
+      "El destino insiste en que le des al botón rosa 💖"
+    ];
+    const yesTextList = [
+      "¡Sí, me encantaría! 💖",
+      "¡Por supuesto que sí! 🥰",
+      "¡DALE CLIC AQUÍ! 🚀",
+      "¡SÍ AL 100%! 🌹",
+      "¡LA RESPUESTA CORRECTA! ✨"
+    ];
+
+    function evadeNoButton(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      dodgeAttempts++;
+
+      inviteSubtext.innerText = excusesList[Math.min(dodgeAttempts - 1, excusesList.length - 1)];
+
+      const scale = Math.min(1 + dodgeAttempts * 0.08, 1.35);
+      btnYes.style.transform = `scale(${scale})`;
+      btnYesText.innerText = yesTextList[Math.min(dodgeAttempts - 1, yesTextList.length - 1)];
+
+      // Mover directamente al body para permitir movimiento por toda la pantalla sin recorte
+      if (btnNo.parentElement !== document.body) {
+        document.body.appendChild(btnNo);
+      }
+
+      // Estilos garantizados para estar siempre al frente y visible en pantalla completa
+      btnNo.style.position = 'fixed';
+      btnNo.style.zIndex = '999999';
+      btnNo.style.display = 'inline-flex';
+      btnNo.style.visibility = 'visible';
+      btnNo.style.opacity = '1';
+      btnNo.style.transition = 'left 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.15s ease';
+
+      const noScale = Math.max(1 - dodgeAttempts * 0.05, 0.75);
+      btnNo.style.transform = `scale(${noScale})`;
+
+      const btnRect = btnNo.getBoundingClientRect();
+      const btnW = btnRect.width || 120;
+      const btnH = btnRect.height || 42;
+
+      // Límites visibles seguros dentro del viewport actual
+      const margin = 20;
+      const maxLeft = Math.max(margin, window.innerWidth - btnW - margin);
+      const maxTop = Math.max(margin, window.innerHeight - btnH - margin);
+
+      const randomLeft = Math.floor(Math.random() * (maxLeft - margin)) + margin;
+      const randomTop = Math.floor(Math.random() * (maxTop - margin)) + margin;
+
+      btnNo.style.left = `${randomLeft}px`;
+      btnNo.style.top = `${randomTop}px`;
+    }
+
+    btnNo.addEventListener('mouseenter', evadeNoButton);
+    btnNo.addEventListener('touchstart', evadeNoButton, { passive: false });
+    btnNo.addEventListener('click', evadeNoButton);
+
+    btnYes.addEventListener('click', () => {
+      // Ocultar botón 'No' al aceptar
+      if (btnNo) {
+        btnNo.style.display = 'none';
+      }
+
+      triggerConfetti();
+      document.getElementById('screen-invite').classList.add('hidden');
+      document.getElementById('screen-planner').classList.remove('hidden');
+      
+      init15DaysCalendar();
+      renderStep2Cards();
+      renderHoursSlots();
+      updateLogisticsFields();
+      goToStep(1);
+    });
+
+    function triggerConfetti() {
+      confetti({
+        particleCount: 90,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#f43f5e', '#ec4899', '#fb7185', '#fda4af']
+      });
+    }
+
+    // ==========================================
+    // PASO 1: SELECCIÓN DE PLAN
+    // ==========================================
+    function selectPlan(planKey) {
+      state.plan = planKey;
+      if (planKey === 'cena') state.planName = 'Cena deliciosa 🍽️';
+      if (planKey === 'cheves') state.planName = 'Cheves y botana 🍻';
+      if (planKey === 'cine') state.planName = 'Cine y palomitas 🎬';
+
+      ['cena', 'cheves', 'cine'].forEach(k => {
+        const card = document.getElementById(`plan-card-${k}`);
+        if (card) {
+          if (k === planKey) card.classList.add('selected');
+          else card.classList.remove('selected');
+        }
+      });
+
+      renderStep2Cards();
+      updateLogisticsFields();
+    }
+
+    // ==========================================
+    // PASO 2: RENDERIZADO DE LUGARES
+    // ==========================================
+    function renderStep2Cards() {
+      const data = placesCatalog[state.plan];
+      document.getElementById('step2-heading').innerText = data.heading;
+      document.getElementById('step2-subheading').innerText = data.subheading;
+
+      const container = document.getElementById('step-2-options-container');
+      container.innerHTML = '';
+
+      data.items.forEach((item, index) => {
+        const isDefault = (index === 0);
+        if (isDefault) {
+          state.placeId = item.id;
+          state.placeName = `${item.label} (${item.desc}) ${item.icon}`;
+        }
+
+        const card = document.createElement('div');
+        card.className = `select-card ${isDefault ? 'selected' : ''} border-2 border-slate-200 rounded-2xl p-3 cursor-pointer flex items-center gap-3`;
+        card.onclick = () => {
+          state.placeId = item.id;
+          state.placeName = `${item.label} (${item.desc}) ${item.icon}`;
+          document.querySelectorAll('#step-2-options-container .select-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          renderHoursSlots();
+        };
+
+        card.innerHTML = `
+          <span class="text-2xl">${item.icon}</span>
+          <div class="text-left flex-1">
+            <p class="font-bold text-slate-800 text-xs">${item.label}</p>
+            <p class="text-[11px] text-rose-500 font-semibold leading-tight">${item.desc}</p>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // ==========================================
+    // PASO 3: CALENDARIO (15 DÍAS) Y HORARIOS
+    // ==========================================
+    function init15DaysCalendar() {
+      const today = new Date();
+      const maxDate = new Date();
+      maxDate.setDate(today.getDate() + 15);
+
+      const toISO = (d) => {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      };
+
+      const datePicker = document.getElementById('date-picker');
+      const minStr = toISO(today);
+      const maxStr = toISO(maxDate);
+
+      datePicker.min = minStr;
+      datePicker.max = maxStr;
+      datePicker.value = minStr;
+
+      handleDateChange(minStr);
+    }
+
+    function handleDateChange(dateValue) {
+      if (!dateValue) return;
+      state.selectedDate = dateValue;
+
+      const [y, m, d] = dateValue.split('-').map(Number);
+      const dateObj = new Date(y, m - 1, d);
+      state.isSaturday = (dateObj.getDay() === 6);
+
+      const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+      state.formattedDate = `${daysOfWeek[dateObj.getDay()]} ${d} de ${months[dateObj.getMonth()]}`;
+
+      document.getElementById('date-helper-text').innerText = `📅 Seleccionado: ${state.formattedDate}`;
+
+      renderHoursSlots();
+    }
+
+    function renderHoursSlots() {
+      const container = document.getElementById('hours-grid');
+      const softballWarn = document.getElementById('softball-warning-banner');
+      const huerfanaWarn = document.getElementById('huerfana-warning-banner');
+      const satBadge = document.getElementById('saturday-badge');
+      container.innerHTML = '';
+
+      const isHuerfana = (state.plan === 'cheves' && state.placeId === 'huerfana');
+
+      // Banners informativos
+      if (state.isSaturday) {
+        softballWarn.classList.remove('hidden');
+        satBadge.classList.remove('hidden');
+      } else {
+        softballWarn.classList.add('hidden');
+        satBadge.classList.add('hidden');
+      }
+
+      if (isHuerfana) {
+        huerfanaWarn.classList.remove('hidden');
+      } else {
+        huerfanaWarn.classList.add('hidden');
+      }
+
+      // Filtrado de horas
+      const validHours = allSlots.filter(h => {
+        const [timePart] = h.split(' ');
+        const [hourStr, minStr] = timePart.split(':');
+        const hour = parseInt(hourStr, 10);
+        const min = parseInt(minStr, 10);
+        const totalMin = (hour === 12 ? 0 : hour) * 60 + min;
+
+        // Regla Sábado: a partir de las 9:30 PM (570 min)
+        if (state.isSaturday && totalMin < 570) return false;
+
+        // Regla Huérfana: máximo a las 9:30 PM (570 min)
+        if (isHuerfana && totalMin > 570) return false;
+
+        return true;
+      });
+
+      if (!validHours.includes(state.selectedTime)) {
+        state.selectedTime = validHours[0] || '9:30 PM';
+      }
+
+      validHours.forEach(hour => {
+        const isSelected = (state.selectedTime === hour);
+        const chip = document.createElement('div');
+        chip.className = `hour-chip ${isSelected ? 'selected' : ''} rounded-xl py-2 px-1 cursor-pointer text-center text-xs font-semibold select-none flex items-center justify-center gap-1`;
+        chip.innerHTML = `<span>${hour}</span>${isSelected ? '<span class="text-[10px]">✓</span>' : ''}`;
+        
+        chip.onclick = () => {
+          state.selectedTime = hour;
+          renderHoursSlots();
+        };
+        container.appendChild(chip);
+      });
+    }
+
+    // ==========================================
+    // PASO 4: LOGÍSTICA Y FORMATO DE CINE
+    // ==========================================
+    function selectLogistics(option, el) {
+      state.logistics = option;
+      document.querySelectorAll('#step-content-4 .select-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function updateCineCustomTime() {
+      const hourSelect = document.getElementById('cine-hour-select');
+      const minSelect = document.getElementById('cine-minute-select');
+      if (!hourSelect || !minSelect) return;
+
+      const hourVal = hourSelect.value;
+      let minVal = minSelect.value;
+
+      // Si elige las 12 AM (medianoche exacta), fijar minutos en 00
+      if (hourVal === '12') {
+        minSelect.value = '00';
+        minSelect.disabled = true;
+        minVal = '00';
+      } else {
+        minSelect.disabled = false;
+      }
+
+      const period = (hourVal === '12') ? 'AM' : 'PM';
+      const formattedTime = `${hourVal}:${minVal} ${period}`;
+      state.cineShowtime = formattedTime;
+      
+      const badge = document.getElementById('cinema-selected-badge');
+      if (badge) badge.innerText = formattedTime;
+    }
+
+    function updateLogisticsFields() {
+      const cineWrapper = document.getElementById('cine-fields-wrapper');
+      const suggestionsWrapper = document.getElementById('suggestions-field-wrapper');
+
+      if (state.plan === 'cine') {
+        cineWrapper.classList.remove('hidden');
+        suggestionsWrapper.classList.add('hidden');
+        updateCineCustomTime();
+      } else {
+        // Cena deliciosa o Cheves y botana
+        cineWrapper.classList.add('hidden');
+        suggestionsWrapper.classList.remove('hidden');
+      }
+    }
+
+    function clearFieldError(input) {
+      if (input.value.trim()) {
+        input.classList.remove('border-rose-500', 'bg-rose-100/60', 'ring-2', 'ring-rose-400');
+        input.classList.add('border-rose-200', 'bg-rose-50/50');
+        const err = document.getElementById(`${input.id.replace('-input', '')}-error`);
+        if (err) err.classList.add('hidden');
+      }
+    }
+
+    // ==========================================
+    // PASO 5: TÉRMINOS Y CONDICIONES
+    // ==========================================
+    function handleTermsChange(checked) {
+      state.termsAccepted = checked;
+      if (checked) {
+        document.getElementById('terms-error-text').classList.add('hidden');
+      }
+    }
+
+    // ==========================================
+    // STEPPER Y NAVEGACIÓN
+    // ==========================================
+    function updateStepperUI() {
+      const titles = [
+        "Elige el plan",
+        "Elige el lugar",
+        "Fecha y horario",
+        "Logística de encuentro",
+        "Términos y condiciones"
+      ];
+
+      document.getElementById('stepper-badge').innerText = `Paso ${currentStep} de ${totalSteps}`;
+      document.getElementById('stepper-title').innerText = titles[currentStep - 1];
+
+      for (let i = 1; i <= totalSteps; i++) {
+        const bar = document.getElementById(`progress-bar-${i}`);
+        if (i <= currentStep) {
+          bar.classList.replace('bg-slate-200', 'bg-rose-500');
+        } else {
+          bar.classList.replace('bg-rose-500', 'bg-slate-200');
+        }
+      }
+
+      document.querySelectorAll('.step-view').forEach(v => v.classList.add('hidden'));
+      document.getElementById(`step-content-${currentStep}`).classList.remove('hidden');
+
+      const btnPrev = document.getElementById('btn-prev-step');
+      if (currentStep === 1) {
+        btnPrev.classList.add('invisible');
+      } else {
+        btnPrev.classList.remove('invisible');
+      }
+
+      const btnNextLabel = document.getElementById('btn-next-label');
+      if (currentStep === totalSteps) {
+        btnNextLabel.innerText = 'Firmar y Finalizar';
+      } else {
+        btnNextLabel.innerText = 'Siguiente';
+      }
+
+      lucide.createIcons();
+    }
+
+    // Limpia los campos de texto y resetea validaciones de error
+    function clearTextInputFields() {
+      const cineLocInput = document.getElementById('cine-location-input');
+      const cineMovieInput = document.getElementById('cine-movie-input');
+      const suggInput = document.getElementById('suggestions-input');
+
+      if (cineLocInput) {
+        cineLocInput.value = '';
+        clearFieldError(cineLocInput);
+      }
+      if (cineMovieInput) {
+        cineMovieInput.value = '';
+        clearFieldError(cineMovieInput);
+      }
+      if (suggInput) {
+        suggInput.value = '';
+      }
+
+      state.cineLocation = '';
+      state.cineMovie = '';
+      state.suggestions = '';
+    }
+
+    function goToStep(stepNum) {
+      currentStep = stepNum;
+      updateStepperUI();
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        clearTextInputFields();
+        currentStep--;
+        updateStepperUI();
+      }
+    }
+
+    function nextStep() {
+      if (currentStep === 4) {
+        if (state.plan === 'cine') {
+          const locInput = document.getElementById('cine-location-input');
+          const movieInput = document.getElementById('cine-movie-input');
+          const locVal = locInput ? locInput.value.trim() : '';
+          const movieVal = movieInput ? movieInput.value.trim() : '';
+
+          let hasError = false;
+
+          // Validación de Cine más cercano
+          const locError = document.getElementById('cine-location-error');
+          if (!locVal) {
+            locInput.classList.remove('border-rose-200', 'bg-rose-50/50');
+            locInput.classList.add('border-rose-500', 'bg-rose-100/60', 'ring-2', 'ring-rose-400');
+            if (locError) locError.classList.remove('hidden');
+            hasError = true;
+          } else {
+            locInput.classList.remove('border-rose-500', 'bg-rose-100/60', 'ring-2', 'ring-rose-400');
+            locInput.classList.add('border-rose-200', 'bg-rose-50/50');
+            if (locError) locError.classList.add('hidden');
+          }
+
+          // Validación de Película
+          const movieError = document.getElementById('cine-movie-error');
+          if (!movieVal) {
+            movieInput.classList.remove('border-rose-200', 'bg-rose-50/50');
+            movieInput.classList.add('border-rose-500', 'bg-rose-100/60', 'ring-2', 'ring-rose-400');
+            if (movieError) movieError.classList.remove('hidden');
+            hasError = true;
+          } else {
+            movieInput.classList.remove('border-rose-500', 'bg-rose-100/60', 'ring-2', 'ring-rose-400');
+            movieInput.classList.add('border-rose-200', 'bg-rose-50/50');
+            if (movieError) movieError.classList.add('hidden');
+          }
+
+          if (hasError) {
+            showToast('Por favor completa todos los campos de cine 🎬');
+            return;
+          }
+
+          state.cineLocation = locVal;
+          state.cineMovie = movieVal;
+          updateCineCustomTime();
+        } else {
+          const suggInput = document.getElementById('suggestions-input');
+          state.suggestions = suggInput ? suggInput.value.trim() : '';
+        }
+      }
+
+      if (currentStep === totalSteps) {
+        if (!state.termsAccepted) {
+          document.getElementById('terms-error-text').classList.remove('hidden');
+          showToast('Debes aceptar los términos 📜');
+          return;
+        }
+        showSummaryScreen();
+        return;
+      }
+
+      currentStep++;
+      updateStepperUI();
+    }
+
+    // ==========================================
+    // PANTALLA DE RESUMEN Y WHATSAPP
+    // ==========================================
+    function showSummaryScreen() {
+      document.getElementById('screen-planner').classList.add('hidden');
+      document.getElementById('screen-summary').classList.remove('hidden');
+
+      document.getElementById('sum-plan-val').innerText = state.planName;
+      document.getElementById('sum-place-val').innerText = state.placeName;
+      document.getElementById('sum-date-val').innerText = state.formattedDate;
+      document.getElementById('sum-time-val').innerText = state.selectedTime;
+      document.getElementById('sum-pickup-val').innerText = state.logistics;
+
+      const cineLocRow = document.getElementById('sum-cine-location-row');
+      const cineMovieRow = document.getElementById('sum-cine-movie-row');
+      const cineTimeRow = document.getElementById('sum-cine-time-row');
+      const suggestionsRow = document.getElementById('sum-suggestions-row');
+
+      if (state.plan === 'cine') {
+        suggestionsRow.classList.add('hidden');
+
+        if (state.cineLocation) {
+          cineLocRow.classList.remove('hidden');
+          document.getElementById('sum-cine-location-val').innerText = state.cineLocation;
+        } else {
+          cineLocRow.classList.add('hidden');
+        }
+
+        if (state.cineMovie) {
+          cineMovieRow.classList.remove('hidden');
+          document.getElementById('sum-cine-movie-val').innerText = state.cineMovie;
+        } else {
+          cineMovieRow.classList.remove('hidden');
+          document.getElementById('sum-cine-movie-val').innerText = 'Por definir en cartelera';
+        }
+
+        cineTimeRow.classList.remove('hidden');
+        document.getElementById('sum-cine-time-val').innerText = state.cineShowtime || '8:30 PM';
+      } else {
+        // Cena o Cheves
+        cineLocRow.classList.add('hidden');
+        cineMovieRow.classList.add('hidden');
+        cineTimeRow.classList.add('hidden');
+
+        if (state.suggestions) {
+          suggestionsRow.classList.remove('hidden');
+          document.getElementById('sum-suggestions-val').innerText = state.suggestions;
+        } else {
+          suggestionsRow.classList.add('hidden');
+        }
+      }
+
+      prepareWhatsAppLink();
+      triggerConfetti();
+    }
+
+    // Genera el enlace universal para Google Calendar
+    function buildGoogleCalendarUrl() {
+      if (!state.selectedDate) return '#';
+
+      const [year, month, day] = state.selectedDate.split('-').map(Number);
+
+      let timeStrToParse = state.selectedTime;
+      if (state.plan === 'cine' && state.cineShowtime) {
+        timeStrToParse = state.cineShowtime;
+      }
+
+      let [timePart, meridiem] = timeStrToParse.trim().split(' ');
+      let [hStr, mStr] = timePart.split(':');
+      let hour = parseInt(hStr, 10);
+      let minute = parseInt(mStr || '00', 10);
+
+      if (meridiem && meridiem.toUpperCase() === 'PM' && hour < 12) {
+        hour += 12;
+      } else if (meridiem && meridiem.toUpperCase() === 'AM' && hour === 12) {
+        hour = 0;
+      }
+
+      const startDate = new Date(year, month - 1, day, hour, minute, 0);
+      const endDate = new Date(startDate.getTime() + 2.5 * 60 * 60 * 1000);
+
+      const toCalStr = (d) => {
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+      };
+
+      const datesParam = `${toCalStr(startDate)}/${toCalStr(endDate)}`;
+
+      const title = `Cita Oficial ✨: ${state.planName}`;
+      let details = `Plan acordado:\n- Lugar: ${state.placeName}\n- Coordinación: ${state.logistics}\n`;
+      if (state.plan === 'cine') {
+        if (state.cineLocation) details += `- Cine: ${state.cineLocation}\n`;
+        if (state.cineMovie) details += `- Película: ${state.cineMovie}\n`;
+        details += `- Horario de función: ${state.cineShowtime}\n`;
+      } else if (state.suggestions) {
+        details += `- Sugerencias: ${state.suggestions}\n`;
+      }
+      details += `\nTérminos y condiciones aceptados:\n1. Puntualidad (multa al min 15: shot de tequila o botana picante)\n2. Anti-arrepentimiento (multa: invitar la revancha y meme formal)\n3. Derechos de autor y fotos exclusivos`;
+
+      const location = state.plan === 'cine' && state.cineLocation ? state.cineLocation : state.placeName;
+
+      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${datesParam}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
+    }
+
+    function generateSummaryMessage() {
+      let msg = `¡Hola! Acepto salir contigo 💖✨\n\n`;
+      msg += `Aquí está nuestro plan oficial y firmado:\n`;
+      msg += `• Plan: ${state.planName}\n`;
+      msg += `• Lugar: ${state.placeName}\n`;
+      msg += `• Fecha: ${state.formattedDate}\n`;
+      msg += `• Hora de encuentro: ${state.selectedTime}`;
+      if (state.isSaturday) {
+        msg += ` (Sujeto a confirmación por juego de softbol ⚾)`;
+      }
+      msg += `\n• Coordinación: ${state.logistics}\n`;
+
+      if (state.plan === 'cine') {
+        if (state.cineLocation) {
+          msg += `• Cine más cercano: ${state.cineLocation} 📍\n`;
+        }
+        if (state.cineMovie) {
+          msg += `• Película elegida: "${state.cineMovie}" 🎬\n`;
+        }
+        msg += `• Función de cine: ${state.cineShowtime} 🎟️🍿\n`;
+      } else if (state.suggestions) {
+        msg += `• Sugerencias para la salida: "${state.suggestions}" 💡\n`;
+      }
+
+      msg += `\n📜 Términos y condiciones:\n`;
+      msg += `✓ Leídos y firmados sin derecho a fianza (puntualidad con shot de tequila o botana picante, cláusula anti-arrepentimiento y derechos exclusivos de fotos 📸).\n\n`;
+
+      const calUrl = buildGoogleCalendarUrl();
+      msg += `📅 Agregar a tu Google Calendar:\n${calUrl}\n\n`;
+
+      msg += `¿Trato hecho? ¡Nos vemos pronto! 🥰`;
+      return msg;
+    }
+
+    function prepareWhatsAppLink() {
+      const calUrl = buildGoogleCalendarUrl();
+      const calBtn = document.getElementById('btn-add-calendar');
+      if (calBtn) calBtn.setAttribute('href', calUrl);
+
+      const text = generateSummaryMessage();
+      const url = `https://api.whatsapp.com/send?phone=${WHATSAPP_PHONE}&text=${encodeURIComponent(text)}`;
+      document.getElementById('btn-send-whatsapp').setAttribute('href', url);
+    }
+
+    function copySummaryToClipboard() {
+      const text = generateSummaryMessage();
+      const label = document.getElementById('btn-copy-label');
+
+      const finalizeCopy = () => {
+        showToast('¡Resumen copiado! 📋');
+        label.innerText = '¡Copiado con éxito!';
+        setTimeout(() => label.innerText = 'Copiar texto del plan', 2000);
+      };
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(finalizeCopy).catch(() => fallbackCopy(text, finalizeCopy));
+      } else {
+        fallbackCopy(text, finalizeCopy);
+      }
+    }
+
+    function fallbackCopy(text, cb) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+        if (cb) cb();
+      } catch (err) {
+        showToast('No se pudo copiar');
+      }
+      document.body.removeChild(ta);
+    }
+
+    function editChoices() {
+      clearTextInputFields();
+      document.getElementById('screen-summary').classList.add('hidden');
+      document.getElementById('screen-planner').classList.remove('hidden');
+      goToStep(1);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-text').innerText = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>

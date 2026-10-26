@@ -238,7 +238,7 @@
         <div id="step-content-3" class="step-view hidden space-y-2.5">
           <div class="text-left">
             <h2 class="text-base font-bold text-slate-800">¿Qué día y a qué hora? 🗓️</h2>
-            <p class="text-xs text-slate-500">Disponible a partir de hoy y durante los próximos 15 días.</p>
+            <p class="text-xs text-slate-500">Disponible a partir de mañana y durante los próximos 16 días.</p>
           </div>
 
           <!-- Alerta de Sábado por Softbol -->
@@ -435,7 +435,7 @@
                 Sé que eres una persona muy cotizada, pero nada anula tu compromiso previo conmigo. Quedarse en pijama o inventar planes de última hora queda estrictamente vetado.
               </p>
               <p class="bg-rose-50 text-rose-700 p-2 rounded-xl font-semibold border border-rose-100">
-                🚨 <strong>Multa:</strong> Cancelar sin causa de fuerza mayor comprobable amerita invitar la revancha completa en la siguiente cita y mandar un meme formal de disculpa.
+                🚨 <strong>Multa:</strong> Cancelar sin causa de fuerza mayor comprobable amerita invitar la revancha completa en la siguiente cita y mandar un video de disculpa.
               </p>
             </div>
 
@@ -818,8 +818,11 @@
     // ==========================================
     function init15DaysCalendar() {
       const today = new Date();
+      const minDate = new Date();
+      minDate.setDate(today.getDate() + 1); // A partir del día siguiente
+
       const maxDate = new Date();
-      maxDate.setDate(today.getDate() + 15);
+      maxDate.setDate(today.getDate() + 1 + 16); // 16 días después del día siguiente
 
       const toISO = (d) => {
         const y = d.getFullYear();
@@ -829,7 +832,7 @@
       };
 
       const datePicker = document.getElementById('date-picker');
-      const minStr = toISO(today);
+      const minStr = toISO(minDate);
       const maxStr = toISO(maxDate);
 
       datePicker.min = minStr;
@@ -1229,7 +1232,7 @@
       } else if (state.suggestions) {
         details += `- Sugerencias: ${state.suggestions}\n`;
       }
-      details += `\nTérminos y condiciones aceptados:\n1. Puntualidad (multa al min 15: shot de tequila o botana picante)\n2. Anti-arrepentimiento (multa: invitar la revancha y meme formal)\n3. Derechos de autor y fotos exclusivos`;
+      details += `\nTérminos y condiciones aceptados:\n1. Puntualidad (multa al min 15: shot de tequila o botana picante)\n2. Anti-arrepentimiento (multa: invitar la revancha y mandar un video de disculpa)\n3. Derechos de autor y fotos exclusivos`;
 
       const location = state.plan === 'cine' && state.cineLocation ? state.cineLocation : state.placeName;
 
@@ -1261,7 +1264,7 @@
       }
 
       msg += `\n📜 Términos y condiciones:\n`;
-      msg += `✓ Leídos y firmados sin derecho a fianza (puntualidad con shot de tequila o botana picante, cláusula anti-arrepentimiento y derechos exclusivos de fotos 📸).\n\n`;
+      msg += `✓ Leídos y firmados sin derecho a fianza (puntualidad con shot de tequila o botana picante, cláusula anti-arrepentimiento con video de disculpa y derechos exclusivos de fotos 📸).\n\n`;
 
       // Enlace a Google Calendar para ti en el mensaje
       const calUrl = buildGoogleCalendarUrl();
